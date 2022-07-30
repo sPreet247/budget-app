@@ -1,8 +1,8 @@
-# React Budget App
+# Budget App
 
 To run:
 
 ```
-npm install 
-npm start 
+npm install
+npm start
 ```
