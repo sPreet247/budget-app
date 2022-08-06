@@ -1,7 +1,6 @@
-import React, { createContext, useReducer } from "react";
+import React, { createContext, useReducer, useState } from "react";
 import { v4 as uuidv4 } from "uuid";
 
-// 5. The reduceer - this is used to update the state, based on the action
 export const AppReducer = (state, action) => {
   switch (action.type) {
     case "ADD_EXPENSE":
@@ -39,6 +38,8 @@ const initialState = {
   ],
 };
 
+export const ThemeContext = createContext(null);
+
 // 2. Creates the context this is the thing our components import and use to get the state
 export const AppContext = createContext();
 
@@ -47,17 +48,26 @@ export const AppContext = createContext();
 export const AppProvider = (props) => {
   // 4. Sets up the app state. takes a reducer, and an initial state
   const [state, dispatch] = useReducer(AppReducer, initialState);
+};
 
+export const ThemeProvider = (props) => {
+  const [theme, setTheme] = useState("dark");
+
+  const toggleTheme = () => {
+    setTheme((curr) => (curr === "light" ? "dark" : "light"));
+  };
   // 5. Returns our context. Pass in the values we want to expose
   return (
-    <AppContext.Provider
-      value={{
-        expenses: state.expenses,
-        budget: state.budget,
-        dispatch,
-      }}
-    >
-      {props.children}
-    </AppContext.Provider>
+    <ThemeContext.Provider value={{ theme, toggleTheme }}>
+      <AppContext.Provider
+        value={{
+          expenses: state.expenses,
+          budget: state.budget,
+          dispatch,
+        }}
+      >
+        {props.children}
+      </AppContext.Provider>
+    </ThemeContext.Provider>
   );
 };
